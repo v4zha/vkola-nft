@@ -29,9 +29,6 @@ Vazha Kola NFT is a minimal nft protocol solana program written in Rust using An
 ```bash
     anchor deploy
 ```
-Build binary
-
-
 
 ## To-dos
 - Error handling

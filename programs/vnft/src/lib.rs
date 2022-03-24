@@ -7,7 +7,7 @@ pub mod vnft {
 
     use super::*;
 
-    pub fn create_nft(ctx: Context<VazhaNft>,data:String) -> Result<()> {
+    pub fn mint_nft(ctx: Context<MintNft>,data:String) -> Result<()> {
         let account=&mut ctx.accounts.account;
         account.authority=ctx.accounts.authority.key();
         account.owner=account.key();
@@ -22,15 +22,15 @@ pub mod vnft {
 }
 
 #[derive(Accounts)]
-pub struct VazhaNft<'info> {
+pub struct MintNft<'info> {
 #[account(init,payer=authority,space=100)]
-pub account:Account<'info,NftState>,
+pub account:Account<'info,VazhaNft>,
 #[account(mut)]
 pub authority:Signer<'info>,
 pub system_program:Program<'info,System>,
 }
 #[account]
-pub struct NftState{
+pub struct VazhaNft{
 pub nft_data:String,
 pub authority:Pubkey,
 pub owner:Pubkey,
@@ -38,6 +38,6 @@ pub owner:Pubkey,
 #[derive(Accounts)]
 pub struct UpdateNft<'info>{
     #[account(mut,has_one=authority)]
-    pub account:Account<'info,NftState>,
+    pub account:Account<'info,VazhaNft>,
     pub authority:Signer<'info>,
 }

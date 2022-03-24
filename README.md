@@ -1,7 +1,7 @@
 # Vazha Kola NFT
 
 **Vazha Kola NFT** is the second phase of the V4zha kola Project.<br>
-Vazha Kola NFT is a minimal nft protocol solana program written in Rust using Anchor framework : ) .
+Vazha Kola NFT is a minimal nft protocol solana program written in Rust using Anchor framework : ) .<br>
 **NOTE** : The NFT protocol used in solana is [**Metaplex**](https://www.metaplex.com/).Vazha Kola NFT is a minimal protocal in its initial stage with minimal functionalities.
 <br><br>
 

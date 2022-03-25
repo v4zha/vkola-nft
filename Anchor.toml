@@ -1,7 +1,7 @@
 [features]
 seeds = false
 [programs.localnet]
-vnft = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+vnft = "AHqPK6YeALn9xFEVqUvN41vsRxrWypWoWHjng1jSgZDj"
 
 [registry]
 url = "https://anchor.projectserum.com"

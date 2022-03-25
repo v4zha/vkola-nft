@@ -7,6 +7,8 @@ describe("vnft Tests : )", () => {
   // Configure the client to use the local cluster.
   const provider=anchor.Provider.env();
   anchor.setProvider(provider);
+  console.log(process.env.ANCHOR_PROVIDER_URL);
+  console.log(JSON.stringify(provider.wallet.publicKey));
   const program = anchor.workspace.Vnft as Program<Vnft>;
   const keypair1=anchor.web3.Keypair.generate();
   const keypair2=anchor.web3.Keypair.generate();
@@ -28,7 +30,7 @@ describe("vnft Tests : )", () => {
     const tx = await program.rpc.mintNft(data,{
       accounts:{
         account:keypair2.publicKey,
-        authority:provider.wallet.publicKey,
+        // authority:provider.wallet.publicKey,
         systemProgram:anchor.web3.SystemProgram.programId,
       },
       signers:[keypair2]

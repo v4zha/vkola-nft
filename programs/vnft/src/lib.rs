@@ -1,21 +1,19 @@
-use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+use anchor_lang::{prelude::*};
+
+declare_id!("AHqPK6YeALn9xFEVqUvN41vsRxrWypWoWHjng1jSgZDj");
 
 #[program]
 pub mod vnft {
 
     use super::*;
-
-    pub fn mint_nft(ctx: Context<MintNft>,data:String) -> Result<()> {
-        let account=&mut ctx.accounts.account;
-        account.authority=ctx.accounts.authority.key();
-        account.owner=account.key();
-        account.nft_data=data;
+     pub fn mint_nft(ctx: Context<MintNft>) -> Result<()> {
+        let account=&mut ctx.accounts.mint_id;
+        account.owner=ctx.accounts.authority.key();
         Ok(())
     }
-    pub fn transfer_nft(ctx:Context<UpdateNft>,owner:Pubkey)->Result<()>{
-        let account=&mut ctx.accounts.account;
+    pub fn transfer_owner(ctx:Context<TransferNft>,owner:Pubkey)->Result<()>{
+        let account=&mut ctx.accounts.mint_id;
         account.owner=owner;
         Ok(())
     }
@@ -23,21 +21,21 @@ pub mod vnft {
 
 #[derive(Accounts)]
 pub struct MintNft<'info> {
-#[account(init,payer=authority,space=100)]
-pub account:Account<'info,VazhaNft>,
+#[account(init,payer=authority,space=64)]
+pub mint_id:Account<'info,VazhaNft>,
 #[account(mut)]
 pub authority:Signer<'info>,
 pub system_program:Program<'info,System>,
 }
 #[account]
 pub struct VazhaNft{
-pub nft_data:String,
-pub authority:Pubkey,
+pub nft_token:Pubkey,
+pub nft_meta:String,
 pub owner:Pubkey,
 }
 #[derive(Accounts)]
-pub struct UpdateNft<'info>{
-    #[account(mut,has_one=authority)]
-    pub account:Account<'info,VazhaNft>,
-    pub authority:Signer<'info>,
+pub struct TransferNft<'info>{
+    #[account(mut,has_one=owner)]
+    pub mint_id:Account<'info,VazhaNft>,
+    pub owner:Signer<'info>
 }

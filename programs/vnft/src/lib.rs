@@ -20,11 +20,11 @@ pub mod vnft {
     ) -> Result<()> {
         let account = &mut ctx.accounts.mint_id;
         let account_info =account.to_account_infos();
-        let meta_program=&mut ctx.accounts.meta_program;
+        let meta_program=&ctx.accounts.meta_program;
         account.nft_token = token;
         account.owner = ctx.accounts.authority.key();
-        let nft_meta = NtfMeta::new(meta_program,account_info, token, account.owner, name, symbol, uri);
-        nft_meta.create_meta();
+        let nft_meta = NtfMeta::new(meta_program.clone(),account_info, token, account.owner, name, symbol, uri);
+        nft_meta.create_meta().unwrap();
         Ok(())
     }
     // pub fn transfer_owner(ctx:Context<TransferNft>,owner:Pubkey)->Result<()>{

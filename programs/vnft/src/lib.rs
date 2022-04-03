@@ -16,7 +16,7 @@ pub mod vnft {
         meta_data.creator = meta_data.authority;
         meta_data.uri = uri;
         meta_data.collection = collection;
-        meta_data.bump = *ctx.bumps.get("v4zha_nft").unwrap();
+        meta_data.bump = *ctx.bumps.get("meta_data").unwrap();
         Ok(())
     }
     pub fn update_authority(ctx: Context<VkolaUpdate>, new_authority: Pubkey) -> Result<()> {
@@ -34,14 +34,14 @@ pub struct VkolaCreate<'info> {
     pub authority: Signer<'info>,
     #[account(init,
     payer=authority,
-    space= 8+32+32+200+200+200+2,
+    space= 8+32+32+200+300+200+2,
     seeds=[b"v4zha_nft",mint.as_ref()],
     bump)]
     pub meta_data: Account<'info, VkolaMeta>,
     pub system_program: Program<'info, System>,
 }
 
-//space 8+32+32+200+200+200+2
+//space 8+32+32+200+300+200+2
 #[account]
 pub struct VkolaMeta {
     authority: Pubkey,

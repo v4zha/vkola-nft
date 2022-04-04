@@ -1,5 +1,14 @@
 use anchor_lang::prelude::*;
 declare_id!("AHqPK6YeALn9xFEVqUvN41vsRxrWypWoWHjng1jSgZDj");
+macro_rules! check_buffer {
+    ($($e:expr),+) => {
+      $ (
+        if $e.as_bytes().len()>30{
+            return err!(NftError::BufferError);
+        };
+    )*
+    };
+}
 #[program]
 pub mod vnft {
     use super::*;
@@ -10,6 +19,7 @@ pub mod vnft {
         uri: String,
         collection: String,
     ) -> Result<()> {
+        check_buffer!(name, uri, collection);
         let meta_data = &mut ctx.accounts.meta_data;
         meta_data.name = name;
         meta_data.authority = ctx.accounts.authority.key();
@@ -19,11 +29,18 @@ pub mod vnft {
         meta_data.bump = *ctx.bumps.get("meta_data").unwrap();
         Ok(())
     }
-    pub fn update_authority(ctx: Context<VkolaUpdate>, new_authority: Pubkey) -> Result<()> {
+    pub fn update_authority(
+        ctx: Context<VkolaUpdate>,
+        _mint: Pubkey,
+        new_authority: Pubkey,
+    ) -> Result<()> {
         let meta_data = &mut ctx.accounts.meta_data;
-        if meta_data.authority == ctx.accounts.authority.key() {
-            meta_data.authority = new_authority;
-        }
+        require_keys_eq!(
+            meta_data.authority,
+            ctx.accounts.authority.key(),
+            NftError::AuthorityError
+        );
+        meta_data.authority = new_authority;
         Ok(())
     }
 }
@@ -34,14 +51,14 @@ pub struct VkolaCreate<'info> {
     pub authority: Signer<'info>,
     #[account(init,
     payer=authority,
-    space= 8+32+32+200+300+200+2,
+    space= 8+32+32+30+30+30+2,
     seeds=[b"v4zha_nft",mint.as_ref()],
     bump)]
     pub meta_data: Account<'info, VkolaMeta>,
     pub system_program: Program<'info, System>,
 }
 
-//space 8+32+32+200+300+200+2
+//space 8+32+32+30+30+30+2
 #[account]
 pub struct VkolaMeta {
     authority: Pubkey,
@@ -60,4 +77,12 @@ pub struct VkolaUpdate<'info> {
         seeds=[b"v4zha_nft",mint.as_ref()],
               bump=meta_data.bump)]
     pub meta_data: Account<'info, VkolaMeta>,
+}
+
+#[error_code]
+enum NftError {
+    #[msg("Unable to verify NFT authority :) ")]
+    AuthorityError,
+    #[msg("Argument size should be less than 30 bytes :) ")]
+    BufferError,
 }

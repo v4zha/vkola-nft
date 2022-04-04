@@ -22,7 +22,7 @@ describe("vnft Tests : )", () => {
         const [mint_pda, _] = await vnft.get_pda(program.programId);
         const name = "v4zha";
         const collection = "v-collection";
-        const uri = "https://raw.githubusercontent.com/v4zha/vkola-nft/master/assets/vazha_kola.png";
+        const uri = "va4zha.com hehe : )";
         const tx = await program.rpc.createMeta(mint, name, uri, collection, {
             accounts:
             {
@@ -33,8 +33,88 @@ describe("vnft Tests : )", () => {
             signers: [keypair],
         }
         );
-        console.log(tx);
+        // console.log(tx);
+        //get nft : )
         const nft = await program.account.vkolaMeta.fetch(mint_pda);
-        console.log(JSON.stringify(nft));
+        console.log(JSON.stringify(nft) + "\n");
+        const new_owner = anchor.web3.Keypair.generate();
+        const v_new = new VazhaNft(new_owner, connection);
+        v_new.fund_account();
+        //transfer nft ownership
+        const own = await program.rpc.updateAuthority(mint, new_owner.publicKey, {
+            accounts: {
+                authority: keypair.publicKey,
+                metaData: mint_pda,
+            },
+            signers: [keypair],
+        });
+        // console.log(own);
+        //fetch nft : )
+        const nft_new = await program.account.vkolaMeta.fetch(mint_pda);
+        console.log(JSON.stringify(nft_new) + "\n");
+        console.log(`Old owner >> ${nft.authority} \n new owner >> ${nft_new.authority}\n`);
+    });
+    it("Buffer Check", async () => {
+        const res = async () => {
+            const vnft = new VazhaNft(keypair, connection);
+            await vnft.init();
+            const [mint, token_acc] = vnft.get_mint();
+            console.log(`Mint : ${mint}\nToken Account : ${token_acc.address}\n`);
+            const [mint_pda, _] = await vnft.get_pda(program.programId);
+            const name = "v4zha";
+            const collection = "v-collection";
+            const uri = "buffer test go brrrrrrrrrrrrrrrrrrrrrrrrrrrr";
+            const tx = await program.rpc.createMeta(mint, name, uri, collection, {
+                accounts:
+                {
+                    authority: keypair.publicKey,
+                    metaData: mint_pda,
+                    systemProgram: SystemProgram.programId,
+                },
+                signers: [keypair],
+            }
+            );
+        };
+        await res().catch(err => console.log(`[Error] : ${err}\n`));
+    });
+    it("Authority Check", async () => {
+        const res = async () => {
+            const vnft = new VazhaNft(keypair, connection);
+            await vnft.init();
+            const [mint, token_acc] = vnft.get_mint();
+            console.log(`Mint : ${mint}\nToken Account : ${token_acc.address}\n`);
+            const [mint_pda, _] = await vnft.get_pda(program.programId);
+            const name = "v4zha";
+            const collection = "v-collection";
+            const uri = "va4zha.com hehe : )";
+            const tx = await program.rpc.createMeta(mint, name, uri, collection, {
+                accounts:
+                {
+                    authority: keypair.publicKey,
+                    metaData: mint_pda,
+                    systemProgram: SystemProgram.programId,
+                },
+                signers: [keypair],
+            }
+            );
+            // console.log(tx);
+            //get nft : )
+            const nft = await program.account.vkolaMeta.fetch(mint_pda);
+            console.log(JSON.stringify(nft) + "\n");
+            const new_owner = anchor.web3.Keypair.generate();
+            const v_new = new VazhaNft(new_owner, connection);
+            v_new.fund_account();
+            //Sign with new account : )
+            //Raise Error : )
+            const own = await program.rpc.updateAuthority(mint, new_owner.publicKey, {
+                accounts: {
+                    authority: new_owner.publicKey,
+                    metaData: mint_pda,
+                },
+                signers: [new_owner],
+            });
+            // console.log(own);
+        }
+        await res().catch(err=>console.log(`[Error]: ${err}\n`))
     });
 });

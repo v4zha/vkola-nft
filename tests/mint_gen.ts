@@ -87,5 +87,9 @@ export class VazhaNft {
         ],pid);
         return res;
     }
+    get_all():Array<PublicKey>{
+        const res:PublicKey[]=[this.mint];
+        return res;
+    }
 }
 

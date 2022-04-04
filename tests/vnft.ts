@@ -11,7 +11,7 @@ describe("vnft Tests : )", () => {
     console.log(process.env.ANCHOR_PROVIDER_URL);
     console.log(JSON.stringify(provider.wallet.publicKey));
     const program = anchor.workspace.Vnft as Program<Vnft>;
-    //   let wallet=provider.wallet;
+    // let wallet=provider.wallet;
     let keypair = anchor.web3.Keypair.generate();
     let connection = provider.connection;
     it("Create Nft", async () => {
@@ -20,7 +20,6 @@ describe("vnft Tests : )", () => {
         const [mint, token_acc] = vnft.get_mint();
         console.log(`Mint : ${mint}\nToken Account : ${token_acc.address}\n`);
         const [mint_pda, _] = await vnft.get_pda(program.programId);
-        // console.log(mint_pda);
         const name = "v4zha";
         const collection = "v-collection";
         const uri = "https://raw.githubusercontent.com/v4zha/vkola-nft/master/assets/vazha_kola.png";
@@ -31,9 +30,11 @@ describe("vnft Tests : )", () => {
                 metaData: mint_pda,
                 systemProgram: SystemProgram.programId,
             },
-            signers:[keypair],
+            signers: [keypair],
         }
         );
         console.log(tx);
+        const nft = await program.account.vkolaMeta.fetch(mint_pda);
+        console.log(JSON.stringify(nft));
     });
 });

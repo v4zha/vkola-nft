@@ -126,12 +126,14 @@ describe("vnft Tests : )", () => {
         console.log(JSON.stringify(nft) + "\n");
 
         //Create new owner
-        const new_owner = anchor.web3.Keypair.generate();
-        //tranfser nft token : )
+        const new_key= anchor.web3.Keypair.generate();
+        const new_owner=new VazhaNft(new_key,connection);
+        const recv_token_acc = await new_owner.fund_account()
+                            .then(()=>{return new_owner.create_token_account(vnft.mint)});
         await vnft.fund_account();
-        await vnft.send_nft(new_owner);    
+        await vnft.send_nft(new_owner.wallet.publicKey,recv_token_acc.address);
         //transfer nft ownership
-        const own = await program.rpc.updateAuthority(mint, new_owner.publicKey, {
+        const own = await program.rpc.updateAuthority(mint, new_owner.wallet.publicKey, {
             accounts: {
                 authority: keypair.publicKey,
                 metaData: mint_pda,

@@ -7,7 +7,7 @@ vnft = "AHqPK6YeALn9xFEVqUvN41vsRxrWypWoWHjng1jSgZDj"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/home/v4zha/.config/solana/id.json"
 
 [scripts]

@@ -1,7 +1,6 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { SystemProgram } from "@solana/web3.js";
-// import { clusterApiUrl, Connection } from "@solana/web3.js";
 import { Vnft } from "../target/types/vnft";
 import { VazhaNft } from "./mint_gen";
 describe("vnft Tests : )", () => {
